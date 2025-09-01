@@ -3,7 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO metadata -->
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="description"
+      content="Structured Prompt Builder is a free tool that helps you craft, organize and export structured prompts for large language models. Compose roles, tasks, audiences, styles, tones, constraints, steps, inputs and few-shot examples with ease and preview your prompt in multiple formats."
+    />
+    <meta
+      name="keywords"
+      content="prompt builder, structured prompt, AI prompt generator, LLM, prompt engineering, prompt composer, large language model prompts"
+    />
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Structured Prompt Builder" />
+    <meta
+      property="og:description"
+      content="Create, organize and export structured prompts for AI with our intuitive builder. Preview your prompt in Markdown, JSON and YAML formats."
+    />
+    <!-- Update og:url when deploying to a custom domain -->
+    <meta
+      property="og:url"
+      content="https://structured-prompt-builder.vercel.app"
+    />
+    <!-- Twitter card tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Structured Prompt Builder" />
+    <meta
+      name="twitter:description"
+      content="An easy-to-use tool for assembling structured prompts for large language models."
+    />
+    <!-- Canonical link to avoid duplicate content -->
+    <link
+      rel="canonical"
+      href="https://structured-prompt-builder.vercel.app"
+    />
     <title>Structured Prompt Builder</title>
+    <!-- Structured data for AI-driven services -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Structured Prompt Builder",
+        "description": "Structured Prompt Builder is a web application that lets you assemble and export structured prompts for large language models.",
+        "operatingSystem": "All",
+        "url": "https://structured-prompt-builder.vercel.app",
+        "applicationCategory": "DeveloperApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
     <!-- Import React and ReactDOM from CDN -->
     <script
       crossorigin
@@ -19,6 +70,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 font-sans">
+    <!-- Accessible heading for SEO. Hidden visually but available to crawlers and screen readers. -->
+    <h1 class="sr-only">Structured Prompt Builder</h1>
     <div id="root" class="min-h-screen"></div>
     <script type="text/babel">
       /**
