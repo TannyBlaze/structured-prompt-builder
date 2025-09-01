@@ -1,75 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- SEO metadata -->
-    <meta name="robots" content="index, follow" />
-    <meta
-      name="description"
-      content="Structured Prompt Builder is a free tool that helps you craft, organize and export structured prompts for large language models. Compose roles, tasks, audiences, styles, tones, constraints, steps, inputs and few-shot examples with ease and preview your prompt in multiple formats."
-    />
-    <meta
-      name="keywords"
-      content="prompt builder, structured prompt, AI prompt generator, LLM, prompt engineering, prompt composer, large language model prompts"
-    />
-    <!-- Open Graph tags for social sharing -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Structured Prompt Builder" />
-    <meta
-      property="og:description"
-      content="Create, organize and export structured prompts for AI with our intuitive builder. Preview your prompt in Markdown, JSON and YAML formats."
-    />
-    <!-- Update og:url when deploying to a custom domain -->
-    <meta
-      property="og:url"
-      content="https://structured-prompt-builder.vercel.app"
-    />
-    <!-- Twitter card tags -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Structured Prompt Builder" />
-    <meta
-      name="twitter:description"
-      content="An easy-to-use tool for assembling structured prompts for large language models."
-    />
-    <!-- Canonical link to avoid duplicate content -->
-    <link
-      rel="canonical"
-      href="https://structured-prompt-builder.vercel.app"
-    />
-    <title>Structured Prompt Builder</title>
-    <!-- Structured data for AI-driven services -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Structured Prompt Builder | Free Prompt Engineering Tool</title>
+    <link rel="canonical" href="https://structured-prompt-builder.vercel.app/">
+
+    <meta name="description" content="Build structured prompts with role, task, constraints, steps, inputs, and few-shot examples. Export to JSON, YAML, Markdown. Free, fast, and runs in your browser.">
+    <meta name="keywords" content="structured prompt builder,prompt engineering tool,prompt template,few-shot,json schema,ai prompts">
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+    <meta name="theme-color" content="#111111">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://structured-prompt-builder.vercel.app/">
+    <meta property="og:title" content="Structured Prompt Builder">
+    <meta property="og:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
+    <meta property="og:image" content="/og.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Structured Prompt Builder">
+    <meta name="twitter:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
+    <meta name="twitter:image" content="/og.png">
+
+    <link rel="icon" href="/favicon.ico">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+
+    <!-- If you used Tailwind CDN before, keep this. Otherwise remove. -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+
+    <!-- Production React UMD for speed -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
+
+    <!-- SoftwareApplication + WebSite + FAQPage + HowTo: helps “AI SEO” and rich results -->
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Structured Prompt Builder",
-        "description": "Structured Prompt Builder is a web application that lets you assemble and export structured prompts for large language models.",
-        "operatingSystem": "All",
-        "url": "https://structured-prompt-builder.vercel.app",
-        "applicationCategory": "DeveloperApplication",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
-      }
+    {
+      "@context":"https://schema.org",
+      "@type":"SoftwareApplication",
+      "name":"Structured Prompt Builder",
+      "applicationCategory":"DeveloperApplication",
+      "operatingSystem":"Web",
+      "description":"Build structured prompts with roles, tasks, constraints, steps, inputs, and few-shot examples. Export to JSON/YAML/Markdown.",
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+      "url":"https://structured-prompt-builder.vercel.app/"
+    }
     </script>
-    <!-- Import React and ReactDOM from CDN -->
-    <script
-      crossorigin
-      src="https://unpkg.com/react@18/umd/react.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-    ></script>
-    <!-- Babel for JSX compilation in the browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Tailwind CSS from CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"WebSite",
+      "name":"Structured Prompt Builder",
+      "url":"https://structured-prompt-builder.vercel.app/"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"What is Structured Prompt Builder?","acceptedAnswer":{"@type":"Answer","text":"A free, browser-based tool to compose structured prompts with role, task, constraints, steps, inputs, and few-shot examples."}},
+        {"@type":"Question","name":"Can I export prompts?","acceptedAnswer":{"@type":"Answer","text":"Yes—export to JSON, YAML, or Markdown."}},
+        {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, it’s free and runs entirely in your browser."}}
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"HowTo",
+      "name":"How to build a structured prompt",
+      "step":[
+        {"@type":"HowToStep","text":"Set Role and Task."},
+        {"@type":"HowToStep","text":"Add Constraints and Steps."},
+        {"@type":"HowToStep","text":"Define Inputs and optional Few-shot examples."},
+        {"@type":"HowToStep","text":"Copy or export to JSON/YAML/Markdown."}
+      ]
+    }
+    </script>
   </head>
   <body class="bg-gray-100 font-sans">
+    <header class="bg-white/90 border-b">
+      <div class="max-w-6xl mx-auto px-4 py-6">
+        <h1 class="text-2xl font-semibold">Structured Prompt Builder</h1>
+        <p class="mt-1 text-sm text-gray-600">Compose production-ready prompts with role, task, constraints, steps, inputs, and few-shot. Export in one click.</p>
+      </div>
+    </header>
+
+    <main id="root" class="min-h-screen"></main>
+
+    <noscript>
+      <section class="max-w-6xl mx-auto px-4 py-8">
+        <h2>About this tool</h2>
+        <p>This site requires JavaScript to run the builder UI, but you can still read about features above. Enable JavaScript to use the app.</p>
+      </section>
+    </noscript>
+    
     <!-- Accessible heading for SEO. Hidden visually but available to crawlers and screen readers. -->
     <h1 class="sr-only">Structured Prompt Builder</h1>
     <div id="root" class="min-h-screen"></div>
@@ -696,6 +725,12 @@
       ReactDOM.createRoot(document.getElementById('root')).render(
         <StructuredPromptBuilder />
       );
+    </script>
+
+    <script defer>
+      const e = React.createElement;
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(e('div', null, 'App mounts here (your current React code bundle attaches in your project).'));
     </script>
   </body>
 </html>
