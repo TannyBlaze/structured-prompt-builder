@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -29,14 +29,11 @@
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="https://unpkg.com">
 
-    <!-- If you used Tailwind CDN before, keep this. Otherwise remove. -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Production React UMD for speed -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
-
-    <!-- SoftwareApplication + WebSite + FAQPage + HowTo: helps “AI SEO” and rich results -->
     <script type="application/ld+json">
     {
       "@context":"https://schema.org",
@@ -81,7 +78,12 @@
       ]
     }
     </script>
+
+    <style>
+      .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    </style>
   </head>
+
   <body class="bg-gray-100 font-sans">
     <header class="bg-white/90 border-b">
       <div class="max-w-6xl mx-auto px-4 py-6">
@@ -98,639 +100,213 @@
         <p>This site requires JavaScript to run the builder UI, but you can still read about features above. Enable JavaScript to use the app.</p>
       </section>
     </noscript>
-    
-    <!-- Accessible heading for SEO. Hidden visually but available to crawlers and screen readers. -->
-    <h1 class="sr-only">Structured Prompt Builder</h1>
-    <div id="root" class="min-h-screen"></div>
-    <script type="text/babel">
-      /**
-       * StructuredPromptBuilder
-       *
-       * A single page React application to assemble structured prompts for
-       * large language models. The UI consists of two panes: the left side
-       * for composing prompt pieces (role, task, audience, style, tone,
-       * constraints, steps, inputs and few-shot examples) and the right
-       * side for configuring core model parameters and previewing the
-       * resulting prompt in Markdown, JSON and YAML formats. Users can
-       * import existing prompt JSON files, export their prompt to any
-       * supported format, copy the content to their clipboard and
-       * download a file directly from the browser.
-       */
+
+    <script type="text/babel" data-presets="env,react">
       function StructuredPromptBuilder() {
-        // Scalar fields
         const [role, setRole] = React.useState('');
         const [task, setTask] = React.useState('');
         const [audience, setAudience] = React.useState('');
         const [style, setStyle] = React.useState('');
         const [tone, setTone] = React.useState('');
-
-        // Dynamic lists
         const [constraints, setConstraints] = React.useState([]);
         const [steps, setSteps] = React.useState([]);
         const [inputs, setInputs] = React.useState([]);
         const [examples, setExamples] = React.useState([]);
-
-        // Core model parameters
         const [temperature, setTemperature] = React.useState(0.7);
         const [topP, setTopP] = React.useState(1.0);
         const [maxTokens, setMaxTokens] = React.useState(1024);
         const [presencePenalty, setPresencePenalty] = React.useState(0.0);
         const [frequencyPenalty, setFrequencyPenalty] = React.useState(0.0);
-
-        // Preview tab selection
         const [previewTab, setPreviewTab] = React.useState('markdown');
 
-        /**
-         * Helper to update an item in a list by index
-         */
-        function updateItem(list, setList) {
-          return (index, newValue) => {
-            const updated = [...list];
-            updated[index] = newValue;
-            setList(updated);
-          };
-        }
+        const updateItem = (list, setList) => (i, v) => { const a=[...list]; a[i]=v; setList(a); };
+        const moveItem = (list, setList) => (i, dir) => { const j=i+dir; if(j<0||j>=list.length) return; const a=[...list]; [a[i],a[j]]=[a[j],a[i]]; setList(a); };
+        const removeItem = (list, setList) => (i) => setList(list.filter((_,x)=>x!==i));
+        const addItem = (list, setList, v) => setList([...list, v]);
 
-        /**
-         * Helper to move an item in a list up or down
-         */
-        function moveItem(list, setList) {
-          return (index, direction) => {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= list.length) return;
-            const reordered = [...list];
-            const temp = reordered[index];
-            reordered[index] = reordered[newIndex];
-            reordered[newIndex] = temp;
-            setList(reordered);
-          };
-        }
-
-        /**
-         * Helper to add a new item to a list
-         */
-        function addItem(list, setList, defaultValue) {
-          setList([...list, defaultValue]);
-        }
-
-        /**
-         * Helper to remove an item from a list
-         */
-        function removeItem(list, setList) {
-          return (index) => {
-            const updated = list.filter((_, i) => i !== index);
-            setList(updated);
-          };
-        }
-
-        // Specific operations per list
         const updateConstraint = updateItem(constraints, setConstraints);
-        const moveConstraint = moveItem(constraints, setConstraints);
+        const moveConstraint   = moveItem(constraints, setConstraints);
         const removeConstraint = removeItem(constraints, setConstraints);
 
         const updateStep = updateItem(steps, setSteps);
-        const moveStep = moveItem(steps, setSteps);
+        const moveStep   = moveItem(steps, setSteps);
         const removeStep = removeItem(steps, setSteps);
 
         const updateInput = updateItem(inputs, setInputs);
-        const moveInput = moveItem(inputs, setInputs);
+        const moveInput   = moveItem(inputs, setInputs);
         const removeInput = removeItem(inputs, setInputs);
 
         const updateExample = updateItem(examples, setExamples);
-        const moveExample = moveItem(examples, setExamples);
+        const moveExample   = moveItem(examples, setExamples);
         const removeExample = removeItem(examples, setExamples);
 
-        /**
-         * Generate a prompt object from the current state
-         */
-        function buildPromptObject() {
-          return {
-            role: role.trim() || undefined,
-            task: task.trim() || undefined,
-            audience: audience.trim() || undefined,
-            style: style.trim() || undefined,
-            tone: tone.trim() || undefined,
-            constraints: constraints.filter(Boolean),
-            steps: steps.filter(Boolean),
-            inputs: inputs
-              .filter(Boolean)
-              .map((item) => {
-                const parts = item.split(':');
-                if (parts.length >= 2) {
-                  const name = parts.shift().trim();
-                  const value = parts.join(':').trim();
-                  return { name, value };
-                }
-                return { name: item.trim(), value: '' };
-              }),
-            examples: examples.filter(Boolean),
-            parameters: {
-              temperature,
-              top_p: topP,
-              max_tokens: maxTokens,
-              presence_penalty: presencePenalty,
-              frequency_penalty: frequencyPenalty,
-            },
-          };
+        const buildPromptObject = () => ({
+          role: role.trim() || undefined,
+          task: task.trim() || undefined,
+          audience: audience.trim() || undefined,
+          style: style.trim() || undefined,
+          tone: tone.trim() || undefined,
+          constraints: constraints.filter(Boolean),
+          steps: steps.filter(Boolean),
+          inputs: inputs.filter(Boolean).map((s)=>{const p=s.split(':'); if(p.length>=2){const n=p.shift().trim(); return {name:n,value:p.join(':').trim()};} return {name:s.trim(),value:''};}),
+          examples: examples.filter(Boolean),
+          parameters: {
+            temperature, top_p: topP, max_tokens: maxTokens,
+            presence_penalty: presencePenalty, frequency_penalty: frequencyPenalty
+          }
+        });
+
+        function jsonToYaml(obj, indent=0){
+          const sp='  '.repeat(indent);
+          if(Array.isArray(obj)) return obj.map(it=>{
+            const nested=jsonToYaml(it, indent+1);
+            return typeof it==='object' && it!==null ? `${sp}-\n${nested}` : `${sp}- ${nested.trim()}`
+          }).join('\n');
+          if(obj===null||obj===undefined) return 'null';
+          if(typeof obj!=='object') return String(obj);
+          return Object.keys(obj).filter(k=>obj[k]!==undefined).map(k=>{
+            const v=obj[k];
+            if(typeof v==='object' && v!==null){ return `${sp}${k}:\n${jsonToYaml(v, indent+1)}`; }
+            return `${sp}${k}: ${jsonToYaml(v, indent+1).trim()}`;
+          }).join('\n');
         }
 
-        /**
-         * Convert a JavaScript object to YAML. This is a simple
-         * implementation suitable for the prompt structures used in
-         * this application. It does not support all possible YAML
-         * constructs but covers nested objects and arrays of scalars
-         * and objects.
-         */
-        function jsonToYaml(obj, indent = 0) {
-          const spacing = '  '.repeat(indent);
-          if (Array.isArray(obj)) {
-            return obj
-              .map((item) => {
-                const nested = jsonToYaml(item, indent + 1);
-                if (typeof item === 'object' && item !== null) {
-                  return `${spacing}-\n${nested}`;
-                }
-                return `${spacing}- ${nested.trim()}`;
-              })
-              .join('\n');
-          }
-          if (obj === null || obj === undefined) {
-            return 'null';
-          }
-          if (typeof obj !== 'object') {
-            return String(obj);
-          }
-          return Object.keys(obj)
-            .filter((key) => obj[key] !== undefined)
-            .map((key) => {
-              const value = obj[key];
-              if (typeof value === 'object' && value !== null) {
-                const nested = jsonToYaml(value, indent + 1);
-                return `${spacing}${key}:\n${nested}`;
-              }
-              return `${spacing}${key}: ${jsonToYaml(value, indent + 1).trim()}`;
-            })
-            .join('\n');
-        }
-
-        /**
-         * Generate a Markdown representation of the prompt
-         */
-        function generateMarkdown() {
-          const obj = buildPromptObject();
-          let md = '';
-          if (obj.role) md += `**Role:** ${obj.role}\n\n`;
-          if (obj.task) md += `**Task:** ${obj.task}\n\n`;
-          if (obj.audience) md += `**Audience:** ${obj.audience}\n\n`;
-          if (obj.style) md += `**Style:** ${obj.style}\n\n`;
-          if (obj.tone) md += `**Tone:** ${obj.tone}\n\n`;
-          if (obj.constraints && obj.constraints.length) {
-            md += '**Constraints:**\n';
-            obj.constraints.forEach((c) => {
-              md += `- ${c}\n`;
-            });
-            md += '\n';
-          }
-          if (obj.steps && obj.steps.length) {
-            md += '**Steps:**\n';
-            obj.steps.forEach((s, idx) => {
-              md += `${idx + 1}. ${s}\n`;
-            });
-            md += '\n';
-          }
-          if (obj.inputs && obj.inputs.length) {
-            md += '**Inputs:**\n';
-            obj.inputs.forEach((inp) => {
-              md += `- **${inp.name}**: ${inp.value}\n`;
-            });
-            md += '\n';
-          }
-          if (obj.examples && obj.examples.length) {
-            md += '**Few-shot examples:**\n';
-            obj.examples.forEach((ex) => {
-              md += `- ${ex}\n`;
-            });
-            md += '\n';
-          }
-          md += '**Parameters:**\n';
-          md += `- Temperature: ${obj.parameters.temperature}\n`;
-          md += `- Top-p: ${obj.parameters.top_p}\n`;
-          md += `- Max tokens: ${obj.parameters.max_tokens}\n`;
-          md += `- Presence penalty: ${obj.parameters.presence_penalty}\n`;
-          md += `- Frequency penalty: ${obj.parameters.frequency_penalty}\n`;
+        function generateMarkdown(){
+          const o=buildPromptObject();
+          let md='';
+          if(o.role) md+=`**Role:** ${o.role}\n\n`;
+          if(o.task) md+=`**Task:** ${o.task}\n\n`;
+          if(o.audience) md+=`**Audience:** ${o.audience}\n\n`;
+          if(o.style) md+=`**Style:** ${o.style}\n\n`;
+          if(o.tone) md+=`**Tone:** ${o.tone}\n\n`;
+          if(o.constraints?.length){ md+='**Constraints:**\n'; o.constraints.forEach(c=>md+=`- ${c}\n`); md+='\n'; }
+          if(o.steps?.length){ md+='**Steps:**\n'; o.steps.forEach((s,i)=>md+=`${i+1}. ${s}\n`); md+='\n'; }
+          if(o.inputs?.length){ md+='**Inputs:**\n'; o.inputs.forEach(inp=>md+=`- **${inp.name}**: ${inp.value}\n`); md+='\n'; }
+          if(o.examples?.length){ md+='**Few-shot examples:**\n'; o.examples.forEach(ex=>md+=`- ${ex}\n`); md+='\n'; }
+          md+=`**Parameters:**\n- Temperature: ${o.parameters.temperature}\n- Top-p: ${o.parameters.top_p}\n- Max tokens: ${o.parameters.max_tokens}\n- Presence penalty: ${o.parameters.presence_penalty}\n- Frequency penalty: ${o.parameters.frequency_penalty}`;
           return md.trim();
         }
 
-        /**
-         * Prepare JSON, YAML and Markdown strings for preview and export
-         */
-        const promptObject = buildPromptObject();
-        const jsonString = JSON.stringify(promptObject, null, 2);
-        const yamlString = jsonToYaml(promptObject);
+        const promptObject   = buildPromptObject();
+        const jsonString     = JSON.stringify(promptObject, null, 2);
+        const yamlString     = jsonToYaml(promptObject);
         const markdownString = generateMarkdown();
 
-        /**
-         * Trigger file download for a given filename and content
-         */
-        function downloadFile(filename, content) {
-          const blob = new Blob([content], { type: 'text/plain' });
+        function downloadFile(name, content){
+          const blob = new Blob([content], {type:'text/plain'});
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
+          const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
         }
 
-        /**
-         * Import prompt from uploaded JSON file
-         */
-        function handleImport(event) {
-          const file = event.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            try {
-              const data = JSON.parse(e.target.result);
-              setRole(data.role || '');
-              setTask(data.task || '');
-              setAudience(data.audience || '');
-              setStyle(data.style || '');
-              setTone(data.tone || '');
-              setConstraints(data.constraints || []);
-              setSteps(data.steps || []);
-              setInputs(
-                (data.inputs || []).map((inp) =>
-                  inp.name && inp.value
-                    ? `${inp.name}: ${inp.value}`
-                    : inp.name || ''
-                )
-              );
-              setExamples(data.examples || []);
-              if (data.parameters) {
-                setTemperature(
-                  data.parameters.temperature !== undefined
-                    ? data.parameters.temperature
-                    : 0.7
-                );
-                setTopP(
-                  data.parameters.top_p !== undefined ? data.parameters.top_p : 1.0
-                );
-                setMaxTokens(
-                  data.parameters.max_tokens !== undefined
-                    ? data.parameters.max_tokens
-                    : 1024
-                );
-                setPresencePenalty(
-                  data.parameters.presence_penalty !== undefined
-                    ? data.parameters.presence_penalty
-                    : 0.0
-                );
-                setFrequencyPenalty(
-                  data.parameters.frequency_penalty !== undefined
-                    ? data.parameters.frequency_penalty
-                    : 0.0
-                );
-              }
-            } catch (err) {
-              alert('Invalid JSON file');
-            }
-          };
-          reader.readAsText(file);
-          // Reset the input value so the same file can be re-imported
-          event.target.value = '';
+        function handleImport(e){
+          const f=e.target.files[0]; if(!f) return;
+          const reader=new FileReader();
+          reader.onload=(ev)=>{ try{
+            const d=JSON.parse(ev.target.result);
+            setRole(d.role||''); setTask(d.task||''); setAudience(d.audience||''); setStyle(d.style||''); setTone(d.tone||'');
+            setConstraints(d.constraints||[]); setSteps(d.steps||[]);
+            setInputs((d.inputs||[]).map(inp=>inp.name&&inp.value?`${inp.name}: ${inp.value}`: (inp.name||'')));
+            setExamples(d.examples||[]);
+            if(d.parameters){ setTemperature(d.parameters.temperature ?? 0.7); setTopP(d.parameters.top_p ?? 1.0); setMaxTokens(d.parameters.max_tokens ?? 1024); setPresencePenalty(d.parameters.presence_penalty ?? 0.0); setFrequencyPenalty(d.parameters.frequency_penalty ?? 0.0); }
+          }catch{ alert('Invalid JSON file'); } };
+          reader.readAsText(f);
+          e.target.value='';
         }
 
-        /**
-         * Copy content to clipboard
-         */
-        function copyToClipboard(content) {
-          navigator.clipboard
-            .writeText(content)
-            .then(() => alert('Copied to clipboard!'))
-            .catch(() => alert('Failed to copy.'));
-        }
+        const Section = ({title, description, items, onChange, onAdd, onRemove, onMove, placeholder}) => (
+          <div className="mb-4">
+            <h3 className="text-lg font-medium mb-1">{title}</h3>
+            {description && <p className="text-xs text-gray-500 mb-2">{description}</p>}
+            {items.map((item, index)=>(
+              <div key={index} className="flex items-center mb-2">
+                <input type="text" className="flex-grow border rounded p-2 mr-2" value={item} onChange={(e)=>onChange(index, e.target.value)} placeholder={placeholder}/>
+                <div className="flex flex-col gap-1 mr-2">
+                  <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300" onClick={()=>onMove(index,-1)} disabled={index===0} title="Move up">↑</button>
+                  <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300" onClick={()=>onMove(index,1)} disabled={index===items.length-1} title="Move down">↓</button>
+                </div>
+                <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600" onClick={()=>onRemove(index)} title="Remove">×</button>
+              </div>
+            ))}
+            <button className="mt-2 bg-gray-300 hover:bg-gray-400 text-sm px-3 py-1 rounded" onClick={onAdd}>Add {title.slice(0,-1)}</button>
+          </div>
+        );
+
+        const copyToClipboard = (s)=>navigator.clipboard.writeText(s).then(()=>alert('Copied to clipboard!')).catch(()=>alert('Failed to copy.'));
 
         return (
           <div className="flex flex-col lg:flex-row p-4 gap-4">
-            {/* Left pane: prompt composition */}
             <div className="flex-1 bg-white rounded-lg shadow p-4 overflow-y-auto">
               <h2 className="text-xl font-semibold mb-2">Prompt Composition</h2>
-              {/* Scalar fields */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Role</label>
-                <input
-                  type="text"
-                  className="w-full border rounded p-2"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  placeholder="e.g. Helpful AI assistant"
-                />
+                <input type="text" className="w-full border rounded p-2" value={role} onChange={(e)=>setRole(e.target.value)} placeholder="e.g. Helpful AI assistant"/>
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Task</label>
-                <input
-                  type="text"
-                  className="w-full border rounded p-2"
-                  value={task}
-                  onChange={(e) => setTask(e.target.value)}
-                  placeholder="Describe what you want the model to do"
-                />
+                <input type="text" className="w-full border rounded p-2" value={task} onChange={(e)=>setTask(e.target.value)} placeholder="Describe what you want the model to do"/>
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Audience</label>
-                <input
-                  type="text"
-                  className="w-full border rounded p-2"
-                  value={audience}
-                  onChange={(e) => setAudience(e.target.value)}
-                  placeholder="Who is the prompt for?"
-                />
+                <input type="text" className="w-full border rounded p-2" value={audience} onChange={(e)=>setAudience(e.target.value)} placeholder="Who is the prompt for?"/>
               </div>
               <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Style</label>
-                  <input
-                    type="text"
-                    className="w-full border rounded p-2"
-                    value={style}
-                    onChange={(e) => setStyle(e.target.value)}
-                    placeholder="e.g. Formal, casual"
-                  />
+                  <input type="text" className="w-full border rounded p-2" value={style} onChange={(e)=>setStyle(e.target.value)} placeholder="e.g. Formal, casual"/>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Tone</label>
-                  <input
-                    type="text"
-                    className="w-full border rounded p-2"
-                    value={tone}
-                    onChange={(e) => setTone(e.target.value)}
-                    placeholder="e.g. Friendly, neutral"
-                  />
+                  <input type="text" className="w-full border rounded p-2" value={tone} onChange={(e)=>setTone(e.target.value)} placeholder="e.g. Friendly, neutral"/>
                 </div>
               </div>
-              {/* Constraints list */}
-              <Section
-                title="Constraints"
-                items={constraints}
-                onChange={updateConstraint}
-                onAdd={() => addItem(constraints, setConstraints, '')}
-                onRemove={removeConstraint}
-                onMove={moveConstraint}
-                placeholder="Add a constraint (e.g. Do not mention brand names)"
-              />
-              {/* Steps list */}
-              <Section
-                title="Steps"
-                items={steps}
-                onChange={updateStep}
-                onAdd={() => addItem(steps, setSteps, '')}
-                onRemove={removeStep}
-                onMove={moveStep}
-                placeholder="Add a step (e.g. Research the topic)"
-              />
-              {/* Inputs list */}
-              <Section
-                title="Inputs"
-                description="Use the format name: value"
-                items={inputs}
-                onChange={updateInput}
-                onAdd={() => addItem(inputs, setInputs, '')}
-                onRemove={removeInput}
-                onMove={moveInput}
-                placeholder="e.g. topic: Artificial Intelligence"
-              />
-              {/* Few-shot examples list */}
-              <Section
-                title="Few-shot examples"
-                items={examples}
-                onChange={updateExample}
-                onAdd={() => addItem(examples, setExamples, '')}
-                onRemove={removeExample}
-                onMove={moveExample}
-                placeholder="Add an example"
-              />
-              {/* Import JSON button */}
+
+              <Section title="Constraints" items={constraints} onChange={updateConstraint} onAdd={()=>addItem(constraints,setConstraints,'')} onRemove={removeConstraint} onMove={moveConstraint} placeholder="Add a constraint (e.g. Do not mention brand names)"/>
+              <Section title="Steps" items={steps} onChange={updateStep} onAdd={()=>addItem(steps,setSteps,'')} onRemove={removeStep} onMove={moveStep} placeholder="Add a step (e.g. Research the topic)"/>
+              <Section title="Inputs" description="Use the format name: value" items={inputs} onChange={updateInput} onAdd={()=>addItem(inputs,setInputs,'')} onRemove={removeInput} onMove={moveInput} placeholder="e.g. topic: Artificial Intelligence"/>
+              <Section title="Few-shot examples" items={examples} onChange={updateExample} onAdd={()=>addItem(examples,setExamples,'')} onRemove={removeExample} onMove={moveExample} placeholder="Add an example"/>
+
               <div className="mt-4">
                 <label className="block text-sm font-medium mb-1">Import from JSON</label>
-                <input
-                  type="file"
-                  accept="application/json"
-                  onChange={handleImport}
-                  className="cursor-pointer"
-                />
+                <input type="file" accept="application/json" onChange={handleImport} className="cursor-pointer"/>
               </div>
             </div>
-            {/* Right pane: parameters and preview */}
+
             <div className="flex-1 bg-white rounded-lg shadow p-4 overflow-y-auto">
               <h2 className="text-xl font-semibold mb-2">Model Parameters & Preview</h2>
-              {/* Parameter controls */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Temperature</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="1"
-                    className="w-full border rounded p-2"
-                    value={temperature}
-                    onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Top-p</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="1"
-                    className="w-full border rounded p-2"
-                    value={topP}
-                    onChange={(e) => setTopP(parseFloat(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Max tokens</label>
-                  <input
-                    type="number"
-                    min="1"
-                    className="w-full border rounded p-2"
-                    value={maxTokens}
-                    onChange={(e) => setMaxTokens(parseInt(e.target.value, 10) || 0)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Presence penalty</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="-2"
-                    max="2"
-                    className="w-full border rounded p-2"
-                    value={presencePenalty}
-                    onChange={(e) => setPresencePenalty(parseFloat(e.target.value))}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Frequency penalty</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="-2"
-                    max="2"
-                    className="w-full border rounded p-2"
-                    value={frequencyPenalty}
-                    onChange={(e) => setFrequencyPenalty(parseFloat(e.target.value))}
-                  />
-                </div>
+                <div><label className="block text-sm font-medium mb-1">Temperature</label><input type="number" step="0.01" min="0" max="1" className="w-full border rounded p-2" value={temperature} onChange={(e)=>setTemperature(parseFloat(e.target.value))}/></div>
+                <div><label className="block text-sm font-medium mb-1">Top-p</label><input type="number" step="0.01" min="0" max="1" className="w-full border rounded p-2" value={topP} onChange={(e)=>setTopP(parseFloat(e.target.value))}/></div>
+                <div><label className="block text-sm font-medium mb-1">Max tokens</label><input type="number" min="1" className="w-full border rounded p-2" value={maxTokens} onChange={(e)=>setMaxTokens(parseInt(e.target.value,10)||0)}/></div>
+                <div><label className="block text-sm font-medium mb-1">Presence penalty</label><input type="number" step="0.01" min="-2" max="2" className="w-full border rounded p-2" value={presencePenalty} onChange={(e)=>setPresencePenalty(parseFloat(e.target.value))}/></div>
+                <div><label className="block text-sm font-medium mb-1">Frequency penalty</label><input type="number" step="0.01" min="-2" max="2" className="w-full border rounded p-2" value={frequencyPenalty} onChange={(e)=>setFrequencyPenalty(parseFloat(e.target.value))}/></div>
               </div>
-              {/* Preview tabs */}
+
               <div className="mb-2 border-b">
                 <nav className="flex">
-                  {['markdown', 'json', 'yaml'].map((tab) => (
-                    <button
-                      key={tab}
-                      className={`mr-2 px-3 py-1 text-sm font-medium rounded-t ${
-                        previewTab === tab
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-700'
-                      }`}
-                      onClick={() => setPreviewTab(tab)}
-                    >
-                      {tab.toUpperCase()}
-                    </button>
+                  {['markdown','json','yaml'].map(tab=>(
+                    <button key={tab} className={`mr-2 px-3 py-1 text-sm font-medium rounded-t ${previewTab===tab?'bg-blue-500 text-white':'bg-gray-200 text-gray-700'}`} onClick={()=>setPreviewTab(tab)}>{tab.toUpperCase()}</button>
                   ))}
                 </nav>
               </div>
-              {/* Preview content */}
+
               <div className="mb-4 h-64 overflow-auto border rounded p-2 bg-gray-50 font-mono text-sm whitespace-pre-wrap">
-                {previewTab === 'markdown' && <pre>{markdownString}</pre>}
-                {previewTab === 'json' && <pre>{jsonString}</pre>}
-                {previewTab === 'yaml' && <pre>{yamlString}</pre>}
+                {previewTab==='markdown' && <pre>{markdownString}</pre>}
+                {previewTab==='json' && <pre>{jsonString}</pre>}
+                {previewTab==='yaml' && <pre>{yamlString}</pre>}
               </div>
-              {/* Export & copy buttons */}
+
               <div className="flex flex-wrap gap-2">
-                <button
-                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded"
-                  onClick={() => copyToClipboard(
-                    previewTab === 'markdown'
-                      ? markdownString
-                      : previewTab === 'json'
-                      ? jsonString
-                      : yamlString
-                  )}
-                >
-                  Copy {previewTab.toUpperCase()}
-                </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
-                  onClick={() => downloadFile('prompt.md', markdownString)}
-                >
-                  Download MD
-                </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
-                  onClick={() => downloadFile('prompt.json', jsonString)}
-                >
-                  Download JSON
-                </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
-                  onClick={() => downloadFile('prompt.yaml', yamlString)}
-                >
-                  Download YAML
-                </button>
+                <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded" onClick={()=>copyToClipboard(previewTab==='markdown'?markdownString:previewTab==='json'?jsonString:yamlString)}>Copy {previewTab.toUpperCase()}</button>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.md', markdownString)}>Download MD</button>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.json', jsonString)}>Download JSON</button>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.yaml', yamlString)}>Download YAML</button>
               </div>
             </div>
           </div>
         );
       }
 
-      /**
-       * Section component for repeated list inputs.
-       * Props:
-       * - title: section heading
-       * - description: optional descriptive text
-       * - items: array of strings
-       * - onChange(index, value): update callback for each item
-       * - onAdd(): callback to add a new item
-       * - onRemove(index): callback to remove an item
-       * - onMove(index, direction): callback to reorder items (direction -1 = up, +1 = down)
-       * - placeholder: placeholder for each input field
-       */
-      function Section({
-        title,
-        description,
-        items,
-        onChange,
-        onAdd,
-        onRemove,
-        onMove,
-        placeholder,
-      }) {
-        return (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-1">{title}</h3>
-            {description && <p className="text-xs text-gray-500 mb-2">{description}</p>}
-            {items.map((item, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  className="flex-grow border rounded p-2 mr-2"
-                  value={item}
-                  onChange={(e) => onChange(index, e.target.value)}
-                  placeholder={placeholder}
-                />
-                <div className="flex flex-col gap-1 mr-2">
-                  <button
-                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                    onClick={() => onMove(index, -1)}
-                    disabled={index === 0}
-                    title="Move up"
-                  >
-                    ↑
-                  </button>
-                  <button
-                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                    onClick={() => onMove(index, 1)}
-                    disabled={index === items.length - 1}
-                    title="Move down"
-                  >
-                    ↓
-                  </button>
-                </div>
-                <button
-                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  onClick={() => onRemove(index)}
-                  title="Remove"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-            <button
-              className="mt-2 bg-gray-300 hover:bg-gray-400 text-sm px-3 py-1 rounded"
-              onClick={onAdd}
-            >
-              Add {title.slice(0, -1)}
-            </button>
-          </div>
-        );
-      }
-
-      // Render the app
-      ReactDOM.createRoot(document.getElementById('root')).render(
-        <StructuredPromptBuilder />
-      );
-    </script>
-
-    <script defer>
-      const e = React.createElement;
-      const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(e('div', null, 'App mounts here (your current React code bundle attaches in your project).'));
+      ReactDOM.createRoot(document.getElementById('root')).render(<StructuredPromptBuilder />);
     </script>
   </body>
 </html>
