@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://structured-prompt-builder.vercel.app/sitemap.xml
