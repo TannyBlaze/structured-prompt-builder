@@ -105,6 +105,9 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
         const [model, setModel] = useState('gemini-1.5-flash');
         const [openaiKey, setOpenaiKey] = useState(localStorage.getItem(OPENAI_KEY) || '');
         const [openaiModel, setOpenaiModel] = useState('gpt-4o-mini');
+        const [openaiBaseUrl, setOpenaiBaseUrl] = useState(localStorage.getItem('openai_base_url') || 'https://api.openai.com/v1');
+        const [useChatMode, setUseChatMode] = useState(true);
+
 
         // ===== Preview / format =====
         const [previewTab, setPreviewTab] = useState('markdown');
@@ -290,32 +293,61 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
         // ===== Generation =====
         async function generateWithOpenAI() {
             setGenError('');
-            if (!openaiKey) { setGenError('Please enter your OpenAI API key.'); return; }
+            if (!openaiKey) { setGenError('Please enter your API key.'); return; }
             setGenerating(true);
+
             try {
                 const original = getSourceByFmt(outFmt, { markdownString, jsonString, yamlString, smileString });
-                const body = {
-                    model: openaiModel,
-                    messages: [{ role: 'user', content: `Optimize this prompt:\n\n${original}` }],
-                    temperature,
-                    max_tokens: Math.max(512, maxTokens)
-                };
-                const res = await fetch("https://api.openai.com/v1/chat/completions", {
+
+                const endpoint = useChatMode
+                    ? `${openaiBaseUrl}/chat/completions`
+                    : `${openaiBaseUrl}/completions`;
+
+                const body = useChatMode
+                    ? {
+                        model: openaiModel,
+                        messages: [
+                            { role: "system", content: "You are a helpful assistant." },
+                            { role: "user", content: `Optimize this prompt:\n\n${original}` }
+                        ],
+                        temperature,
+                        max_tokens: Math.max(512, maxTokens)
+                    }
+                    : {
+                        model: openaiModel,
+                        prompt: `Optimize this prompt:\n\n${original}`,
+                        temperature,
+                        max_tokens: Math.max(512, maxTokens)
+                    };
+
+
+                console.log('generateWithOpenAI', { endpoint, body });
+
+                const res = await fetch(endpoint, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${openaiKey}` },
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(openaiKey ? { "Authorization": `Bearer ${openaiKey}` } : {})
+                    },
                     body: JSON.stringify(body)
                 });
+
                 if (!res.ok) throw new Error(await res.text());
                 const data = await res.json();
-                const cleaned = (data.choices?.[0]?.message?.content || '').trim();
-                window.__openaiPreview = { [outFmt]: cleaned };
+
+                const cleaned = useChatMode
+                    ? (data.choices?.[0]?.message?.content || '')
+                    : (data.choices?.[0]?.text || '');
+
+                window.__openaiPreview = { [outFmt]: cleaned.trim() };
                 setPreviewTab(outFmt);
             } catch (e) {
-                setGenError(e.message || 'OpenAI generation failed.');
+                setGenError(e.message || 'OpenAI-compatible generation failed.');
             } finally {
                 setGenerating(false);
             }
         }
+
 
         async function generateWithGemini() {
             setGenError('');
@@ -342,13 +374,17 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
         }
 
         // ===== UI =====
-        const previewText = previewTab==='json'
-            ? jsonString
-            : previewTab==='yaml'
-                ? yamlString
-                : previewTab==='smile'
-                    ? smileString
-                    : markdownString;
+        const previewText =
+            (window.__openaiPreview?.[previewTab]) ||
+            (window.__geminiPreview?.[previewTab]) ||
+            (previewTab === 'json'
+                ? jsonString
+                : previewTab === 'yaml'
+                    ? yamlString
+                    : previewTab === 'smile'
+                        ? smileString
+                        : markdownString);
+
 
         return (
             <div className="w-full max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -437,25 +473,68 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
                         </div>
                     </div>
 
-                    {/* OpenAI */}
-                    <div className="rounded-lg border p-3 mb-3">
-                        <label>OpenAI API Key</label>
-                        <input
-                            type="password"
-                            className="field"
-                            value={openaiKey}
-                            onChange={e=>{ setOpenaiKey(e.target.value); localStorage.setItem(OPENAI_KEY, e.target.value); }}
-                            placeholder="sk-..."
-                        />
-                        <label>Model</label>
-                        <select className="field" value={openaiModel} onChange={e=>setOpenaiModel(e.target.value)}>
-                            <option>gpt-4o</option>
-                            <option>gpt-4o-mini</option>
-                            <option>gpt-4-turbo</option>
-                            <option>gpt-3.5-turbo</option>
-                        </select>
-                        <button className="btn btn-primary mt-2" onClick={generateWithOpenAI} disabled={generating}>Generate with OpenAI</button>
+                    {/* OpenAI / Compatible */}
+                    <div className="rounded-lg border p-4 mb-3 space-y-4">
+                        <h3 className="text-sm font-medium mb-2">OpenAI / Compatible Provider</h3>
+
+                        {/* API Key + Base URL */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="label">API Key</label>
+                                <input
+                                    type="password"
+                                    className="field w-full"
+                                    value={openaiKey}
+                                    onChange={e=>{ setOpenaiKey(e.target.value); localStorage.setItem(OPENAI_KEY, e.target.value); }}
+                                    placeholder="sk-... or provider key"
+                                />
+                            </div>
+                            <div>
+                                <label className="label">Base URL</label>
+                                <input
+                                    type="text"
+                                    className="field w-full"
+                                    value={openaiBaseUrl}
+                                    onChange={e=>{ setOpenaiBaseUrl(e.target.value); localStorage.setItem('openai_base_url', e.target.value); }}
+                                    placeholder="https://api.openai.com/v1"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Mode + Model */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                            <div>
+                                <label className="label">Model</label>
+                                <input
+                                    type="text"
+                                    className="field w-full"
+                                    value={openaiModel}
+                                    onChange={e=>setOpenaiModel(e.target.value)}
+                                    placeholder="gpt-4o-mini, mistral, llama-3..."
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                                <input
+                                    type="checkbox"
+                                    checked={useChatMode}
+                                    onChange={e => setUseChatMode(e.target.checked)}
+                                />
+                                <label className="label m-0">Use Chat Mode</label>
+                            </div>
+                        </div>
+
+                        {/* Action button */}
+                        <div>
+                            <button
+                                className="btn btn-primary w-full md:w-auto"
+                                onClick={generateWithOpenAI}
+                                disabled={generating}
+                            >
+                                {generating ? 'Generating…' : 'Generate'}
+                            </button>
+                        </div>
                     </div>
+
 
                     {/* Gemini */}
                     <div className="rounded-lg border p-3 mb-3">
