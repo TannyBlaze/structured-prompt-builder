@@ -1,28 +1,65 @@
 <!doctype html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Structured Prompt Builder | Free Prompt Engineering Tool</title>
+    <title>Structured Prompt Builder | Free AI Prompt Engineering Tool</title>
     <link rel="canonical" href="https://structured-prompt-builder.vercel.app/" />
-    <meta name="description" content="Build structured prompts with role, task, constraints, steps, inputs, and few-shot examples. Export to JSON, YAML, Markdown. Free, fast, and runs in your browser.">
-    <meta name="keywords" content="structured prompt builder,prompt engineering tool,prompt template,few-shot,json schema,ai prompts">
-    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
-    <meta name="theme-color" content="#111111">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://structured-prompt-builder.vercel.app/">
-    <meta property="og:title" content="Structured Prompt Builder">
-    <meta property="og:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
-    <meta property="og:image" content="/res/preview.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Structured Prompt Builder">
-    <meta name="twitter:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
-    <meta name="twitter:image" content="/res/preview.png">
-    <link rel="icon" href="res/favicon.ico">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/crawler/sitemap.xml">
-    <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="dns-prefetch" href="https://unpkg.com">
 
+    <!-- Primary Meta -->
+    <meta name="title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
+    <meta name="description" content="Free, browser‑based Structured Prompt Builder. Create prompts with role, task, constraints, steps, inputs, and examples. Export JSON, YAML, Markdown. Save to local library. Gemini optimizer included." />
+    <meta name="keywords" content="structured prompt builder, ai prompt builder, prompt engineering tool, free prompt tool, json schema prompts, yaml prompts, markdown prompts, few-shot examples, gemini optimizer, ai writing tool, open source prompt builder, browser prompt builder, local prompt library, free ai tools, prompt templates, llm prompts, prompt editor" />
+    <meta name="author" content="Siddhesh Sonar" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#111111" />
+
+    <!-- Icons & PWA basics (optional but recommended) -->
+    <link rel="icon" href="/res/favicon.ico" />
+    <link rel="apple-touch-icon" href="/res/icon-192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="application-name" content="Structured Prompt Builder" />
+    <meta name="apple-mobile-web-app-title" content="Structured Prompt Builder" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Performance hints -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://structured-prompt-builder.vercel.app/" />
+    <meta property="og:title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
+    <meta property="og:description" content="Free Structured Prompt Builder. Design, preview, and optimize AI prompts. Supports Markdown, JSON, YAML, and Gemini optimization." />
+    <meta property="og:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://structured-prompt-builder.vercel.app/" />
+    <meta name="twitter:title" content="Structured Prompt Builder | Free AI Prompt Engineering Tool" />
+    <meta name="twitter:description" content="Free Structured Prompt Builder. Create prompts with role, task, constraints, steps, inputs, and examples. Export JSON, YAML, Markdown. Local library + Gemini optimizer." />
+    <meta name="twitter:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
+
+    <!-- Sitemap (ensure this path exists) -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/crawler/sitemap.xml" />
+
+    <!-- JSON-LD Schema.org (WebApplication) -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Structured Prompt Builder",
+            "url": "https://structured-prompt-builder.vercel.app/",
+            "description": "Free browser‑based AI prompt builder with structured fields, local prompt library, and Gemini optimization.",
+            "applicationCategory": "AI Tool",
+            "operatingSystem": "Any",
+            "author": { "@type": "Person", "name": "Siddhesh Sonar" },
+            "license": "https://opensource.org/licenses/MIT",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "image": "https://structured-prompt-builder.vercel.app/res/preview.png"
+        }
+    </script>
     <!-- Libs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
