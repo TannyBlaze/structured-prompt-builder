@@ -568,8 +568,21 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
                             </button>
                         ))}
                     </div>
+
                     <div className="preview h-64"><pre>{previewText}</pre></div>
+
+                    {/* subtle sponsor footer under preview */}
+                    <p className="mt-2 text-xs text-gray-600 dark:text-neutral-400">
+                        This preview and export are free. If this saves you time,
+                        <a
+                            className="underline font-medium ml-1"
+                            href="https://github.com/sponsors/Siddhesh2377?utm_source=app&utm_medium=preview_footer&utm_campaign=spb"
+                            target="_blank" rel="noopener"
+                        >consider sponsoring</a>.
+                    </p>
+
                     {genError && <div className="text-red-500 text-sm mt-2">{genError}</div>}
+
 
                     {/* Basic params */}
                     <div className="grid grid-cols-3 gap-3 mt-4">
