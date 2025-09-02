@@ -1,312 +1,131 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <title>Structured Prompt Builder | Free Prompt Engineering Tool</title>
-    <link rel="canonical" href="https://structured-prompt-builder.vercel.app/">
-
+    <link rel="canonical" href="https://structured-prompt-builder.vercel.app/" />
     <meta name="description" content="Build structured prompts with role, task, constraints, steps, inputs, and few-shot examples. Export to JSON, YAML, Markdown. Free, fast, and runs in your browser.">
     <meta name="keywords" content="structured prompt builder,prompt engineering tool,prompt template,few-shot,json schema,ai prompts">
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <meta name="theme-color" content="#111111">
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://structured-prompt-builder.vercel.app/">
     <meta property="og:title" content="Structured Prompt Builder">
     <meta property="og:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
     <meta property="og:image" content="image.png">
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Structured Prompt Builder">
     <meta name="twitter:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
     <meta name="twitter:image" content="image.png">
-
     <link rel="icon" href="favicon.ico">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="https://unpkg.com">
 
+    <!-- Libs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"SoftwareApplication",
-      "name":"Structured Prompt Builder",
-      "applicationCategory":"DeveloperApplication",
-      "operatingSystem":"Web",
-      "description":"Build structured prompts with roles, tasks, constraints, steps, inputs, and few-shot examples. Export to JSON/YAML/Markdown.",
-      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-      "url":"https://structured-prompt-builder.vercel.app/"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"WebSite",
-      "name":"Structured Prompt Builder",
-      "url":"https://structured-prompt-builder.vercel.app/"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"FAQPage",
-      "mainEntity":[
-        {"@type":"Question","name":"What is Structured Prompt Builder?","acceptedAnswer":{"@type":"Answer","text":"A free, browser-based tool to compose structured prompts with role, task, constraints, steps, inputs, and few-shot examples."}},
-        {"@type":"Question","name":"Can I export prompts?","acceptedAnswer":{"@type":"Answer","text":"Yes—export to JSON, YAML, or Markdown."}},
-        {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, it’s free and runs entirely in your browser."}}
-      ]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"HowTo",
-      "name":"How to build a structured prompt",
-      "step":[
-        {"@type":"HowToStep","text":"Set Role and Task."},
-        {"@type":"HowToStep","text":"Add Constraints and Steps."},
-        {"@type":"HowToStep","text":"Define Inputs and optional Few-shot examples."},
-        {"@type":"HowToStep","text":"Copy or export to JSON/YAML/Markdown."}
-      ]
-    }
-    </script>
-
+    <!-- Plain CSS (no @apply) -->
     <style>
-      .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+        :root { color-scheme: light dark; }
+        .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+        .dark .card { background: #0a0a0a; border-color: #262626; }
+        .field { width:100%; border:1px solid #d1d5db; border-radius:.375rem; padding:.5rem .75rem; font-size:.875rem; background:#fff; }
+        .field:focus { outline:none; box-shadow: 0 0 0 2px rgba(79,70,229,.4); border-color:#a5b4fc; }
+        .dark .field { background:#0a0a0a; color:#fff; border-color:#404040; }
+        .label { display:block; font-size:.875rem; font-weight:500; color:#374151; margin-bottom:.25rem; }
+        .dark .label { color:#d4d4d4; }
+        .btn { display:inline-flex; align-items:center; justify-content:center; border-radius:.375rem; padding:.5rem .75rem; font-size:.875rem; font-weight:500; transition:background .15s; }
+        .btn-primary { color:#fff; background:#4f46e5; }
+        .btn-primary:hover { background:#4338ca; }
+        .btn-muted { background:#f3f4f6; color:#111827; }
+        .btn-muted:hover { background:#e5e7eb; }
+        .dark .btn-muted { background:#262626; color:#fff; }
+        .dark .btn-muted:hover { background:#3f3f3f; }
+        .tabs button { margin-right:.5rem; padding:.25rem .75rem; font-size:.875rem; font-weight:600; border-radius:.375rem; }
+        .tabs .active { background:#4f46e5; color:#fff; }
+        .tabs .inactive { background:#e5e7eb; color:#1f2937; }
+        .dark .tabs .inactive { background:#262626; color:#e5e7eb; }
+        .preview { background:#f9fafb; color:#0a0a0a; border:1px solid #e5e7eb; border-radius:.5rem; padding:.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.875rem; overflow:auto; }
+        .dark .preview { background:#0a0a0a; color:#fafafa; border-color:#262626; }
+        .reading .preview { font-family: ui-serif, Georgia, "Times New Roman", serif; line-height:1.75; font-size:.95rem; }
     </style>
-  </head>
+</head>
 
-  <body class="bg-gray-100 font-sans">
-    <header class="bg-white/90 border-b">
-      <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-semibold">Structured Prompt Builder</h1>
-        <p class="mt-1 text-sm text-gray-600">Compose production-ready prompts with role, task, constraints, steps, inputs, and few-shot. Export in one click.</p>
-      </div>
-    </header>
+<body class="bg-gray-100 dark:bg-neutral-950 font-sans">
+<!-- Header (already good) -->
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-neutral-900/80 backdrop-blur border-b border-gray-200 dark:border-neutral-800">
+    <div class="w-full max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <a href="/" class="min-w-0 inline-flex items-center gap-2 text-left">
+            <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 4V2M15 8v2M19 6h2M11 6H9M18.364 1.636l-1.414 1.414M18.364 10.364l-1.414-1.414M11.05 1.636 12.464 3.05M11.05 10.364 12.464 8.95"/>
+                <path d="m3 21 9-9"/><path d="M5 19l-2-2"/>
+            </svg>
+            <div class="leading-tight">
+                <h1 class="text-[1.35rem] font-semibold text-gray-900 dark:text-white tracking-tight truncate">Structured Prompt Builder</h1>
+                <p class="text-xs text-gray-600 dark:text-neutral-400">Build structured prompts • Export JSON/YAML/Markdown • Free & browser-based</p>
+            </div>
+        </a>
 
-    <main id="root" class="min-h-screen"></main>
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <button id="themeToggle" class="rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-2 hover:bg-gray-50 dark:hover:bg-neutral-800" title="Toggle dark / light">
+                <svg id="sunIcon" class="w-5 h-5 hidden dark:inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                <svg id="moonIcon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button id="readingToggle" class="rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-neutral-800" title="Reading mode">
+                <span class="inline-flex items-center gap-2"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M20 22V6a2 2 0 0 0-2-2H7.5A2.5 2.5 0 0 0 5 6.5V22"/><path d="M8 2v4"/></svg><span class="hidden sm:inline">Reading</span></span>
+            </button>
+            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.03-.02-2.02-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.21 1.79 1.21 1.05 1.79 2.76 1.27 3.44.97.11-.76.41-1.27.75-1.56-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.2-3.08-.12-.3-.52-1.5.11-3.12 0 0 .98-.31 3.22 1.2.93-.26 1.93-.4 2.93-.4s2 .14 2.93.4c2.24-1.51 3.22-1.2 3.22-1.2.63 1.62.23 2.82.11 3.12.75.8 1.2 1.82 1.2 3.08 0 4.42-2.7 5.39-5.28 5.68.42.36.8 1.06.8 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+                <span class="hidden sm:inline">GitHub</span>
+            </a>
+            <a href="https://github.com/Siddhesh2377/structured-prompt-builder/stargazers" target="_blank" rel="noopener" class="inline-block">
+                <img src="https://img.shields.io/github/stars/Siddhesh2377/structured-prompt-builder?style=social" alt="GitHub stars" class="h-6" loading="lazy" />
+            </a>
+        </div>
+    </div>
+</header>
 
-    <noscript>
-      <section class="max-w-6xl mx-auto px-4 py-8">
+<script>
+    (function () {
+        const root = document.documentElement;
+        const body = document.body;
+        const storedTheme = localStorage.getItem('spb-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') root.classList.add('dark');
+        const reading = localStorage.getItem('spb-reading') === '1';
+        if (reading) body.classList.add('reading');
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            root.classList.toggle('dark');
+            localStorage.setItem('spb-theme', root.classList.contains('dark') ? 'dark' : 'light');
+        });
+        document.getElementById('readingToggle')?.addEventListener('click', () => {
+            body.classList.toggle('reading');
+            localStorage.setItem('spb-reading', body.classList.contains('reading') ? '1' : '0');
+        });
+    })();
+</script>
+
+<main id="root" class="min-h-screen"></main>
+
+<noscript>
+    <section class="max-w-6xl mx-auto px-4 py-8">
         <h2>About this tool</h2>
         <p>This site requires JavaScript to run the builder UI, but you can still read about features above. Enable JavaScript to use the app.</p>
-      </section>
-    </noscript>
+    </section>
+</noscript>
 
-    <script type="text/babel" data-presets="env,react">
-      function StructuredPromptBuilder() {
-        const [role, setRole] = React.useState('');
-        const [task, setTask] = React.useState('');
-        const [audience, setAudience] = React.useState('');
-        const [style, setStyle] = React.useState('');
-        const [tone, setTone] = React.useState('');
-        const [constraints, setConstraints] = React.useState([]);
-        const [steps, setSteps] = React.useState([]);
-        const [inputs, setInputs] = React.useState([]);
-        const [examples, setExamples] = React.useState([]);
-        const [temperature, setTemperature] = React.useState(0.7);
-        const [topP, setTopP] = React.useState(1.0);
-        const [maxTokens, setMaxTokens] = React.useState(1024);
-        const [presencePenalty, setPresencePenalty] = React.useState(0.0);
-        const [frequencyPenalty, setFrequencyPenalty] = React.useState(0.0);
-        const [previewTab, setPreviewTab] = React.useState('markdown');
+<!-- Order matters; use ./ and expose globals -->
+<!-- Modular scripts (Babel transpiles them in the browser) -->
+<script type="text/babel" data-presets="env,react" src="./src/utils/jsonToYaml.js"></script>
+<script type="text/babel" data-presets="env,react" src="./src/components/Section.jsx"></script>
+<script type="text/babel" data-presets="env,react" src="./src/app.jsx"></script>
 
-        const updateItem = (list, setList) => (i, v) => { const a=[...list]; a[i]=v; setList(a); };
-        const moveItem = (list, setList) => (i, dir) => { const j=i+dir; if(j<0||j>=list.length) return; const a=[...list]; [a[i],a[j]]=[a[j],a[i]]; setList(a); };
-        const removeItem = (list, setList) => (i) => setList(list.filter((_,x)=>x!==i));
-        const addItem = (list, setList, v) => setList([...list, v]);
-
-        const updateConstraint = updateItem(constraints, setConstraints);
-        const moveConstraint   = moveItem(constraints, setConstraints);
-        const removeConstraint = removeItem(constraints, setConstraints);
-
-        const updateStep = updateItem(steps, setSteps);
-        const moveStep   = moveItem(steps, setSteps);
-        const removeStep = removeItem(steps, setSteps);
-
-        const updateInput = updateItem(inputs, setInputs);
-        const moveInput   = moveItem(inputs, setInputs);
-        const removeInput = removeItem(inputs, setInputs);
-
-        const updateExample = updateItem(examples, setExamples);
-        const moveExample   = moveItem(examples, setExamples);
-        const removeExample = removeItem(examples, setExamples);
-
-        const buildPromptObject = () => ({
-          role: role.trim() || undefined,
-          task: task.trim() || undefined,
-          audience: audience.trim() || undefined,
-          style: style.trim() || undefined,
-          tone: tone.trim() || undefined,
-          constraints: constraints.filter(Boolean),
-          steps: steps.filter(Boolean),
-          inputs: inputs.filter(Boolean).map((s)=>{const p=s.split(':'); if(p.length>=2){const n=p.shift().trim(); return {name:n,value:p.join(':').trim()};} return {name:s.trim(),value:''};}),
-          examples: examples.filter(Boolean),
-          parameters: {
-            temperature, top_p: topP, max_tokens: maxTokens,
-            presence_penalty: presencePenalty, frequency_penalty: frequencyPenalty
-          }
-        });
-
-        function jsonToYaml(obj, indent=0){
-          const sp='  '.repeat(indent);
-          if(Array.isArray(obj)) return obj.map(it=>{
-            const nested=jsonToYaml(it, indent+1);
-            return typeof it==='object' && it!==null ? `${sp}-\n${nested}` : `${sp}- ${nested.trim()}`
-          }).join('\n');
-          if(obj===null||obj===undefined) return 'null';
-          if(typeof obj!=='object') return String(obj);
-          return Object.keys(obj).filter(k=>obj[k]!==undefined).map(k=>{
-            const v=obj[k];
-            if(typeof v==='object' && v!==null){ return `${sp}${k}:\n${jsonToYaml(v, indent+1)}`; }
-            return `${sp}${k}: ${jsonToYaml(v, indent+1).trim()}`;
-          }).join('\n');
-        }
-
-        function generateMarkdown(){
-          const o=buildPromptObject();
-          let md='';
-          if(o.role) md+=`**Role:** ${o.role}\n\n`;
-          if(o.task) md+=`**Task:** ${o.task}\n\n`;
-          if(o.audience) md+=`**Audience:** ${o.audience}\n\n`;
-          if(o.style) md+=`**Style:** ${o.style}\n\n`;
-          if(o.tone) md+=`**Tone:** ${o.tone}\n\n`;
-          if(o.constraints?.length){ md+='**Constraints:**\n'; o.constraints.forEach(c=>md+=`- ${c}\n`); md+='\n'; }
-          if(o.steps?.length){ md+='**Steps:**\n'; o.steps.forEach((s,i)=>md+=`${i+1}. ${s}\n`); md+='\n'; }
-          if(o.inputs?.length){ md+='**Inputs:**\n'; o.inputs.forEach(inp=>md+=`- **${inp.name}**: ${inp.value}\n`); md+='\n'; }
-          if(o.examples?.length){ md+='**Few-shot examples:**\n'; o.examples.forEach(ex=>md+=`- ${ex}\n`); md+='\n'; }
-          md+=`**Parameters:**\n- Temperature: ${o.parameters.temperature}\n- Top-p: ${o.parameters.top_p}\n- Max tokens: ${o.parameters.max_tokens}\n- Presence penalty: ${o.parameters.presence_penalty}\n- Frequency penalty: ${o.parameters.frequency_penalty}`;
-          return md.trim();
-        }
-
-        const promptObject   = buildPromptObject();
-        const jsonString     = JSON.stringify(promptObject, null, 2);
-        const yamlString     = jsonToYaml(promptObject);
-        const markdownString = generateMarkdown();
-
-        function downloadFile(name, content){
-          const blob = new Blob([content], {type:'text/plain'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        }
-
-        function handleImport(e){
-          const f=e.target.files[0]; if(!f) return;
-          const reader=new FileReader();
-          reader.onload=(ev)=>{ try{
-            const d=JSON.parse(ev.target.result);
-            setRole(d.role||''); setTask(d.task||''); setAudience(d.audience||''); setStyle(d.style||''); setTone(d.tone||'');
-            setConstraints(d.constraints||[]); setSteps(d.steps||[]);
-            setInputs((d.inputs||[]).map(inp=>inp.name&&inp.value?`${inp.name}: ${inp.value}`: (inp.name||'')));
-            setExamples(d.examples||[]);
-            if(d.parameters){ setTemperature(d.parameters.temperature ?? 0.7); setTopP(d.parameters.top_p ?? 1.0); setMaxTokens(d.parameters.max_tokens ?? 1024); setPresencePenalty(d.parameters.presence_penalty ?? 0.0); setFrequencyPenalty(d.parameters.frequency_penalty ?? 0.0); }
-          }catch{ alert('Invalid JSON file'); } };
-          reader.readAsText(f);
-          e.target.value='';
-        }
-
-        const Section = ({title, description, items, onChange, onAdd, onRemove, onMove, placeholder}) => (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-1">{title}</h3>
-            {description && <p className="text-xs text-gray-500 mb-2">{description}</p>}
-            {items.map((item, index)=>(
-              <div key={index} className="flex items-center mb-2">
-                <input type="text" className="flex-grow border rounded p-2 mr-2" value={item} onChange={(e)=>onChange(index, e.target.value)} placeholder={placeholder}/>
-                <div className="flex flex-col gap-1 mr-2">
-                  <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300" onClick={()=>onMove(index,-1)} disabled={index===0} title="Move up">↑</button>
-                  <button className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300" onClick={()=>onMove(index,1)} disabled={index===items.length-1} title="Move down">↓</button>
-                </div>
-                <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600" onClick={()=>onRemove(index)} title="Remove">×</button>
-              </div>
-            ))}
-            <button className="mt-2 bg-gray-300 hover:bg-gray-400 text-sm px-3 py-1 rounded" onClick={onAdd}>Add {title.slice(0,-1)}</button>
-          </div>
-        );
-
-        const copyToClipboard = (s)=>navigator.clipboard.writeText(s).then(()=>alert('Copied to clipboard!')).catch(()=>alert('Failed to copy.'));
-
-        return (
-          <div className="flex flex-col lg:flex-row p-4 gap-4">
-            <div className="flex-1 bg-white rounded-lg shadow p-4 overflow-y-auto">
-              <h2 className="text-xl font-semibold mb-2">Prompt Composition</h2>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Role</label>
-                <input type="text" className="w-full border rounded p-2" value={role} onChange={(e)=>setRole(e.target.value)} placeholder="e.g. Helpful AI assistant"/>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Task</label>
-                <input type="text" className="w-full border rounded p-2" value={task} onChange={(e)=>setTask(e.target.value)} placeholder="Describe what you want the model to do"/>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Audience</label>
-                <input type="text" className="w-full border rounded p-2" value={audience} onChange={(e)=>setAudience(e.target.value)} placeholder="Who is the prompt for?"/>
-              </div>
-              <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Style</label>
-                  <input type="text" className="w-full border rounded p-2" value={style} onChange={(e)=>setStyle(e.target.value)} placeholder="e.g. Formal, casual"/>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Tone</label>
-                  <input type="text" className="w-full border rounded p-2" value={tone} onChange={(e)=>setTone(e.target.value)} placeholder="e.g. Friendly, neutral"/>
-                </div>
-              </div>
-
-              <Section title="Constraints" items={constraints} onChange={updateConstraint} onAdd={()=>addItem(constraints,setConstraints,'')} onRemove={removeConstraint} onMove={moveConstraint} placeholder="Add a constraint (e.g. Do not mention brand names)"/>
-              <Section title="Steps" items={steps} onChange={updateStep} onAdd={()=>addItem(steps,setSteps,'')} onRemove={removeStep} onMove={moveStep} placeholder="Add a step (e.g. Research the topic)"/>
-              <Section title="Inputs" description="Use the format name: value" items={inputs} onChange={updateInput} onAdd={()=>addItem(inputs,setInputs,'')} onRemove={removeInput} onMove={moveInput} placeholder="e.g. topic: Artificial Intelligence"/>
-              <Section title="Few-shot examples" items={examples} onChange={updateExample} onAdd={()=>addItem(examples,setExamples,'')} onRemove={removeExample} onMove={moveExample} placeholder="Add an example"/>
-
-              <div className="mt-4">
-                <label className="block text-sm font-medium mb-1">Import from JSON</label>
-                <input type="file" accept="application/json" onChange={handleImport} className="cursor-pointer"/>
-              </div>
-            </div>
-
-            <div className="flex-1 bg-white rounded-lg shadow p-4 overflow-y-auto">
-              <h2 className="text-xl font-semibold mb-2">Model Parameters & Preview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div><label className="block text-sm font-medium mb-1">Temperature</label><input type="number" step="0.01" min="0" max="1" className="w-full border rounded p-2" value={temperature} onChange={(e)=>setTemperature(parseFloat(e.target.value))}/></div>
-                <div><label className="block text-sm font-medium mb-1">Top-p</label><input type="number" step="0.01" min="0" max="1" className="w-full border rounded p-2" value={topP} onChange={(e)=>setTopP(parseFloat(e.target.value))}/></div>
-                <div><label className="block text-sm font-medium mb-1">Max tokens</label><input type="number" min="1" className="w-full border rounded p-2" value={maxTokens} onChange={(e)=>setMaxTokens(parseInt(e.target.value,10)||0)}/></div>
-                <div><label className="block text-sm font-medium mb-1">Presence penalty</label><input type="number" step="0.01" min="-2" max="2" className="w-full border rounded p-2" value={presencePenalty} onChange={(e)=>setPresencePenalty(parseFloat(e.target.value))}/></div>
-                <div><label className="block text-sm font-medium mb-1">Frequency penalty</label><input type="number" step="0.01" min="-2" max="2" className="w-full border rounded p-2" value={frequencyPenalty} onChange={(e)=>setFrequencyPenalty(parseFloat(e.target.value))}/></div>
-              </div>
-
-              <div className="mb-2 border-b">
-                <nav className="flex">
-                  {['markdown','json','yaml'].map(tab=>(
-                    <button key={tab} className={`mr-2 px-3 py-1 text-sm font-medium rounded-t ${previewTab===tab?'bg-blue-500 text-white':'bg-gray-200 text-gray-700'}`} onClick={()=>setPreviewTab(tab)}>{tab.toUpperCase()}</button>
-                  ))}
-                </nav>
-              </div>
-
-              <div className="mb-4 h-64 overflow-auto border rounded p-2 bg-gray-50 font-mono text-sm whitespace-pre-wrap">
-                {previewTab==='markdown' && <pre>{markdownString}</pre>}
-                {previewTab==='json' && <pre>{jsonString}</pre>}
-                {previewTab==='yaml' && <pre>{yamlString}</pre>}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded" onClick={()=>copyToClipboard(previewTab==='markdown'?markdownString:previewTab==='json'?jsonString:yamlString)}>Copy {previewTab.toUpperCase()}</button>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.md', markdownString)}>Download MD</button>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.json', jsonString)}>Download JSON</button>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" onClick={()=>downloadFile('prompt.yaml', yamlString)}>Download YAML</button>
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      ReactDOM.createRoot(document.getElementById('root')).render(<StructuredPromptBuilder />);
-    </script>
-  </body>
+</body>
 </html>
