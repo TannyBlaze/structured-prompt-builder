@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Change Log – Structured Prompt Builder</title>
+    <link rel="canonical" href="https://structured-prompt-builder.vercel.app/changelog.html" />
+
+    <!-- Primary Meta -->
+    <meta name="description" content="Release notes and change history for Structured Prompt Builder." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#111111" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Change Log – Structured Prompt Builder" />
+    <meta property="og:description" content="Release notes and update history." />
+    <meta property="og:image" content="https://structured-prompt-builder.vercel.app/res/preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+
+    <!-- Plain CSS (same token set you use) -->
+    <style>
+        :root { color-scheme: light dark; }
+        .card { background:#fff; border:1px solid #e5e7eb; border-radius:.75rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+        .dark .card { background:#0a0a0a; border-color:#262626; }
+        .label { display:block; font-size:.875rem; font-weight:500; color:#374151; margin-bottom:.25rem; }
+        .dark .label { color:#d4d4d4; }
+        .btn { display:inline-flex; align-items:center; justify-content:center; border-radius:.375rem; padding:.5rem .75rem; font-size:.875rem; font-weight:500; transition:background .15s; }
+        .btn-muted { background:#f3f4f6; color:#111827; }
+        .btn-muted:hover { background:#e5e7eb; }
+        .dark .btn-muted { background:#262626; color:#fff; }
+        .dark .btn-muted:hover { background:#3f3f3f; }
+        .tag { display:inline-block; border-radius:9999px; padding:.125rem .5rem; font-size:.7rem; font-weight:600; }
+        .tag-add { background:#ecfdf5; color:#065f46; }
+        .tag-fix { background:#fef2f2; color:#991b1b; }
+        .tag-change { background:#eff6ff; color:#1e3a8a; }
+        .permalink { opacity:.7; }
+        .permalink:hover { opacity:1; }
+        .prose-like { font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"; line-height:1.6; }
+        .reading .prose-like { font-family: ui-serif,Georgia,"Times New Roman",serif; line-height:1.75; }
+    </style>
+
+    <!-- Structured data for latest release -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Structured Prompt Builder",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "softwareVersion": "0.3.0",
+            "releaseNotes": "Library (save/load/duplicate/delete), SMILE format export, section editor rendering & preview sync, UI polish."
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-neutral-950 font-sans">
+
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-neutral-900/80 backdrop-blur border-b border-gray-200 dark:border-neutral-800">
+    <div class="w-full max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <a href="/" class="min-w-0 inline-flex items-center gap-2 text-left" title="Back to builder">
+            <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 4V2M15 8v2M19 6h2M11 6H9M18.364 1.636l-1.414 1.414M18.364 10.364l-1.414-1.414M11.05 1.636 12.464 3.05M11.05 10.364 12.464 8.95"/>
+                <path d="m3 21 9-9"/><path d="M5 19l-2-2"/>
+            </svg>
+            <div class="leading-tight">
+                <h1 class="text-[1.35rem] font-semibold text-gray-900 dark:text-white tracking-tight truncate">Structured Prompt Builder</h1>
+                <p class="text-xs text-gray-600 dark:text-neutral-400">Change Log & Release Notes</p>
+            </div>
+        </a>
+
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <a href="index.html" class="btn btn-muted" title="Open Builder">Open Builder</a>
+            <button id="themeToggle" class="rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-2 hover:bg-gray-50 dark:hover:bg-neutral-800" title="Toggle dark / light">
+                <svg id="sunIcon" class="w-5 h-5 hidden dark:inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                <svg id="moonIcon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button id="readingToggle" class="rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-neutral-800" title="Reading mode">Reading</button>
+            <a href="https://github.com/Siddhesh2377/structured-prompt-builder" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.03-.02-2.02-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.21 1.79 1.21 1.05 1.79 2.76 1.27 3.44.97.11-.76.41-1.27.75-1.56-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.2-3.08-.12-.3-.52-1.5.11-3.12 0 0 .98-.31 3.22 1.2.93-.26 1.93-.4 2.93-.4s2 .14 2.93.4c2.24-1.51 3.22-1.2 3.22-1.2.63 1.62.23 2.82.11 3.12.75.8 1.2 1.82 1.2 3.08 0 4.42-2.7 5.39-5.28 5.68.42.36.8 1.06.8 2.14 0 1.54-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+                <span class="hidden sm:inline">GitHub</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-8 prose-like">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Change Log</h2>
+    <p class="text-gray-600 dark:text-neutral-400 mb-6">All notable changes to this project will be documented here.</p>
+
+    <div id="log" class="space-y-4"></div>
+</main>
+
+<footer class="max-w-4xl mx-auto px-4 pb-12 text-sm text-gray-500 dark:text-neutral-400">
+    <hr class="border-gray-200 dark:border-neutral-800 mb-4" />
+    <p>Want updates? Star the repo on GitHub or check this page occasionally.</p>
+</footer>
+
+<!-- Theme/Reading toggles -->
+<script>
+    (function () {
+        const root = document.documentElement; const body = document.body;
+        const storedTheme = localStorage.getItem('spb-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') root.classList.add('dark');
+        const reading = localStorage.getItem('spb-reading') === '1';
+        if (reading) body.classList.add('reading');
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            root.classList.toggle('dark');
+            localStorage.setItem('spb-theme', root.classList.contains('dark') ? 'dark' : 'light');
+        });
+        document.getElementById('readingToggle')?.addEventListener('click', () => {
+            body.classList.toggle('reading');
+            localStorage.setItem('spb-reading', body.classList.contains('reading') ? '1' : '0');
+        });
+    })();
+</script>
+
+<!-- Render the change log -->
+<script>
+    const CHANGELOG = [
+        {
+            version: "0.3.1",
+            date: "2025-09-02",
+            highlights: [
+                "New Change Log page with dark/reading modes",
+                "Header button linking from the builder"
+            ],
+            added: [],
+            changed: [],
+            fixed: []
+        },
+        {
+            version: "0.3.0",
+            date: "2025-09-02",
+            highlights: [
+                "Local Library: save, load, rename, duplicate, delete",
+                "SMILE export/preview format",
+                "Section editors visible + list controls",
+                "Preview ↔ Output format kept in sync",
+                "Small UX polish and placeholders"
+            ],
+            added: [
+                "Library drawer UI with Save / Save as New",
+                "SMILE (Simple Markup for Instruction Language) text format"
+            ],
+            changed: [
+                "Markdown preview now human-readable (no punctuation stripping)"
+            ],
+            fixed: [
+                "Sections (Constraints/Steps/Inputs/Examples) not rendering",
+                "Generation using wrong format when tab switched"
+            ]
+        },
+        {
+            version: "0.2.0",
+            date: "2025-08-30",
+            highlights: [
+                "Gemini + OpenAI optimize buttons",
+                "Basic parameters editing (temperature, top_p, max_tokens)"
+            ],
+            added: [
+                "Gemini 1.5 endpoints",
+                "OpenAI chat completions call"
+            ],
+            changed: [],
+            fixed: []
+        },
+        {
+            version: "0.1.0",
+            date: "2025-08-20",
+            highlights: ["Initial public release"],
+            added: [
+                "Structured fields: role, task, audience, style, tone",
+                "Export: Markdown, JSON, YAML",
+                "Dark mode + Reading mode"
+            ],
+            changed: [],
+            fixed: []
+        }
+    ];
+
+    function slug(v){ return 'v' + v.replace(/\./g,'-'); }
+
+    function pill(label, cls){
+        return `<span class="tag ${cls}">${label}</span>`;
+    }
+
+    function renderItem(it){
+        const id = slug(it.version);
+        const highlights = (it.highlights||[]).map(s=>`<li>${s}</li>`).join('');
+        const added = (it.added||[]).map(s=>`<li>${s}</li>`).join('');
+        const changed = (it.changed||[]).map(s=>`<li>${s}</li>`).join('');
+        const fixed = (it.fixed||[]).map(s=>`<li>${s}</li>`).join('');
+
+        return `
+    <article id="${id}" class="card p-4">
+      <div class="flex items-center justify-between gap-2">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          ${it.version}
+          <a href="#${id}" class="permalink text-gray-500 dark:text-neutral-400 ml-2" title="Permalink">#</a>
+        </h3>
+        <div class="text-sm text-gray-600 dark:text-neutral-400">${new Date(it.date).toLocaleDateString()}</div>
+      </div>
+
+      ${highlights ? `<div class="mt-2">
+        <div class="mb-1 text-sm font-medium text-gray-700 dark:text-neutral-300">Highlights</div>
+        <ul class="list-disc pl-5">${highlights}</ul>
+      </div>` : ''}
+
+      <div class="grid md:grid-cols-3 gap-4 mt-3">
+        ${added ? `<div><div class="mb-1">${pill('Added','tag-add')}</div><ul class="list-disc pl-5">${added}</ul></div>` : ''}
+        ${changed ? `<div><div class="mb-1">${pill('Changed','tag-change')}</div><ul class="list-disc pl-5">${changed}</ul></div>` : ''}
+        ${fixed ? `<div><div class="mb-1">${pill('Fixed','tag-fix')}</div><ul class="list-disc pl-5">${fixed}</ul></div>` : ''}
+      </div>
+    </article>
+  `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const holder = document.getElementById('log');
+        holder.innerHTML = CHANGELOG.map(renderItem).join('');
+    });
+</script>
+</body>
+</html>
