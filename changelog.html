@@ -24,24 +24,78 @@
     <!-- Plain CSS (same token set you use) -->
     <style>
         :root { color-scheme: light dark; }
-        .card { background:#fff; border:1px solid #e5e7eb; border-radius:.75rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
-        .dark .card { background:#0a0a0a; border-color:#262626; }
-        .label { display:block; font-size:.875rem; font-weight:500; color:#374151; margin-bottom:.25rem; }
-        .dark .label { color:#d4d4d4; }
-        .btn { display:inline-flex; align-items:center; justify-content:center; border-radius:.375rem; padding:.5rem .75rem; font-size:.875rem; font-weight:500; transition:background .15s; }
-        .btn-muted { background:#f3f4f6; color:#111827; }
-        .btn-muted:hover { background:#e5e7eb; }
-        .dark .btn-muted { background:#262626; color:#fff; }
-        .dark .btn-muted:hover { background:#3f3f3f; }
-        .tag { display:inline-block; border-radius:9999px; padding:.125rem .5rem; font-size:.7rem; font-weight:600; }
-        .tag-add { background:#ecfdf5; color:#065f46; }
-        .tag-fix { background:#fef2f2; color:#991b1b; }
-        .tag-change { background:#eff6ff; color:#1e3a8a; }
-        .permalink { opacity:.7; }
-        .permalink:hover { opacity:1; }
-        .prose-like { font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"; line-height:1.6; }
-        .reading .prose-like { font-family: ui-serif,Georgia,"Times New Roman",serif; line-height:1.75; }
+
+        /* Card base */
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: .75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,.04);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .dark .card {
+            background: #0a0a0a;
+            border-color: #262626;
+        }
+
+        /* Headings & labels */
+        .label {
+            display: block;
+            font-size: .875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: .25rem;
+        }
+        .dark .label { color: #d4d4d4; }
+
+        /* General text inside cards */
+        .card h3,
+        .card h4,
+        .card p,
+        .card span {
+            color: #111827; /* Dark text for light mode */
+        }
+        .dark .card h3,
+        .dark .card h4,
+        .dark .card p,
+        .dark .card span {
+            color: #e5e5e5;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            border-radius: 9999px;
+            padding: .125rem .5rem;
+            font-size: .7rem;
+            font-weight: 600;
+            margin-right: .25rem;
+        }
+        .tag-add { background: #ecfdf5; color: #065f46; }
+        .tag-fix { background: #fef2f2; color: #991b1b; }
+        .tag-change { background: #eff6ff; color: #1e3a8a; }
+
+        /* Links */
+        .permalink { opacity: .7; color: #6b7280; text-decoration: none; }
+        .permalink:hover { opacity: 1; color: #374151; }
+
+        /* Typography */
+        .prose-like {
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .dark .prose-like {
+            color: #d4d4d4;
+        }
+        .reading .prose-like {
+            font-family: ui-serif, Georgia, "Times New Roman", serif;
+            line-height: 1.75;
+            font-size: .95rem;
+        }
     </style>
+
 
     <!-- Structured data for latest release -->
     <script type="application/ld+json">
@@ -123,6 +177,20 @@
 <!-- Render the change log -->
 <script>
     const CHANGELOG = [
+        {
+            version: "0.3.2",
+            date: "2025-09-02",
+            highlights: [
+                "Change Log Page",
+                "Fix Light Mode",
+                "Added OpenAI 4.0 endpoints",
+                "Added Support For All OpenAi ( Online / Offline LLama.cpp ) Supported Models ..! Experimental",
+
+            ],
+            added: [],
+            changed: [],
+            fixed: []
+        },
         {
             version: "0.3.1",
             date: "2025-09-02",
