@@ -13,13 +13,13 @@
     <meta property="og:url" content="https://structured-prompt-builder.vercel.app/">
     <meta property="og:title" content="Structured Prompt Builder">
     <meta property="og:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
-    <meta property="og:image" content="image.png">
+    <meta property="og:image" content="/res/preview.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Structured Prompt Builder">
     <meta name="twitter:description" content="Craft structured prompts. Export JSON/YAML/Markdown. Free and browser-based.">
-    <meta name="twitter:image" content="image.png">
-    <link rel="icon" href="favicon.ico">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <meta name="twitter:image" content="/res/preview.png">
+    <link rel="icon" href="res/favicon.ico">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/crawler/sitemap.xml">
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="https://unpkg.com">
 
@@ -87,6 +87,19 @@
             <a href="https://github.com/Siddhesh2377/structured-prompt-builder/stargazers" target="_blank" rel="noopener" class="inline-block">
                 <img src="https://img.shields.io/github/stars/Siddhesh2377/structured-prompt-builder?style=social" alt="GitHub stars" class="h-6" loading="lazy" />
             </a>
+
+            <!-- Sponsor / Support -->
+            <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 rounded-md border border-pink-200 dark:border-pink-700 bg-pink-50 dark:bg-pink-900/40 px-3 py-2 text-sm font-medium text-pink-700 dark:text-pink-200 hover:bg-pink-100 dark:hover:bg-pink-800 transition">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42
+                 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81
+                 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0
+                 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span class="hidden sm:inline">Sponsor</span>
+            </a>
+
         </div>
     </div>
 </header>
@@ -126,11 +139,10 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 
-<!-- Order matters; use ./ and expose globals -->
-<!-- Modular scripts (Babel transpiles them in the browser) -->
 <script type="text/babel" data-presets="env,react" src="./src/utils/jsonToYaml.js"></script>
 <script type="text/babel" data-presets="env,react" src="./src/components/Section.jsx"></script>
 <script type="text/babel" data-presets="env,react" src="./src/app.jsx"></script>
+
 
 </body>
 </html>
