@@ -392,7 +392,7 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
                 {/* Left column */}
                 <div className="card p-4 lg:p-5">
                     <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-lg font-semibold">Prompt Composition</h2>
+                        <h2 className="label text-lg font-semibold">Prompt Composition</h2>
                         <div className="flex gap-2">
                             <button className="btn btn-muted" onClick={()=>setLibraryOpen(v=>!v)}>
                                 {libraryOpen ? 'Close Library' : 'Library'}
@@ -475,7 +475,7 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
 
                     {/* OpenAI / Compatible */}
                     <div className="rounded-lg border p-4 mb-3 space-y-4">
-                        <h3 className="text-sm font-medium mb-2">OpenAI / Compatible Provider</h3>
+                        <h3 className="label text-sm font-medium mb-2">OpenAI / Compatible Provider</h3>
 
                         {/* API Key + Base URL */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -538,7 +538,7 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
 
                     {/* Gemini */}
                     <div className="rounded-lg border p-3 mb-3">
-                        <label>Gemini API Key</label>
+                        <h3 className="label text-sm font-medium mb-2">Gemini API Key</h3>
                         <input
                             type="password"
                             className="field"
@@ -546,7 +546,7 @@ function Section({ title, description, items, onChange, onAdd, onRemove, onMove,
                             onChange={e=>{ setApiKey(e.target.value); localStorage.setItem(GEMINI_KEY, e.target.value); }}
                             placeholder="AIza…"
                         />
-                        <label>Model</label>
+                        <label className="label">Model</label>
                         <select className="field" value={model} onChange={e=>setModel(e.target.value)}>
                             <option>gemini-1.5-flash</option>
                             <option>gemini-1.5-flash-8b</option>
