@@ -1,4 +1,4 @@
-/* global React, ReactDOM */
+/* global React, ReactDOM, jsonToYaml, Section */
 
 // ===== Helpers & tiny utilities =====
 const STORAGE_KEY = 'spb.prompts.v1';
@@ -21,63 +21,6 @@ function uid() {
     catch { return 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 }
 function fmtDate(ts) { return new Date(ts).toLocaleString(); }
-
-// Minimal JSON → YAML
-function jsonToYaml(value, indent = 0) {
-    const pad = '  '.repeat(indent);
-    if (value === null) return 'null';
-    if (typeof value === 'string') return JSON.stringify(value);
-    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-    if (Array.isArray(value)) {
-        if (!value.length) return '[]';
-        return value.map(v => pad + '- ' + jsonToYaml(v, indent + 1).replace(/^\s+/, '')).join('\n');
-    }
-    if (typeof value === 'object') {
-        const keys = Object.keys(value);
-        if (!keys.length) return '{}';
-        return keys.map(k => {
-            const v = value[k];
-            const rendered = jsonToYaml(v, indent + 1);
-            const needsBlock = typeof v === 'object' && v !== null && rendered.indexOf('\n') !== -1;
-            return pad + k + ': ' + (needsBlock ? '\n' + rendered : rendered);
-        }).join('\n');
-    }
-    return JSON.stringify(value);
-}
-
-// Small reusable Section editor
-function Section({ title, description, items, onChange, onAdd, onRemove, onMove, placeholder }) {
-    return (
-        <div className="mt-4">
-            <div className="flex items-center justify-between mb-1">
-                <label className="label">{title}</label>
-                <button className="btn btn-muted btn-xs" onClick={onAdd}>+ Add</button>
-            </div>
-            {description && <div className="text-xs text-gray-500 dark:text-neutral-400 mb-2">{description}</div>}
-            <div className="space-y-2">
-                {items.map((v, i) => (
-                    <div key={i} className="flex gap-2">
-                        <input
-                            type="text"
-                            className="field flex-1"
-                            value={v}
-                            onChange={e => onChange(i, e.target.value)}
-                            placeholder={placeholder}
-                        />
-                        <div className="flex gap-1">
-                            <button title="Up" className="btn btn-muted" onClick={()=>onMove(i,-1)}>↑</button>
-                            <button title="Down" className="btn btn-muted" onClick={()=>onMove(i,+1)}>↓</button>
-                            <button title="Delete" className="btn btn-muted" onClick={()=>onRemove(i)}>✕</button>
-                        </div>
-                    </div>
-                ))}
-                {items.length === 0 && (
-                    <button className="btn btn-muted" onClick={onAdd}>Add your first item</button>
-                )}
-            </div>
-        </div>
-    );
-}
 
 (function () {
     const { useState, useMemo } = React;
