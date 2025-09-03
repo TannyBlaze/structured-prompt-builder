@@ -2,6 +2,18 @@
 
 A lightweight, browser‑first tool for designing **well‑structured AI prompts** with a clean UI, live previews, a local **Prompt Library**, and optional **Gemini‑powered prompt optimization**.
 
+> **Support development**  
+> If this tool saves you time, consider sponsoring to help keep it free and add features like template sharing and cloud sync.  
+> **👉 [Become a sponsor](https://github.com/sponsors/Siddhesh2377)**
+
+<p>
+  <a href="https://github.com/sponsors/Siddhesh2377" target="_blank" rel="noopener"
+     style="display:inline-block;padding:8px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#111827;font-weight:600;text-decoration:none;">
+    Sponsor this project
+  </a>
+</p>
+
+
 ## Highlights
 
 * **Structured fields**: Role, Task, Audience, Style, Tone, Constraints, Steps, Inputs (`name: value`), Few‑shot examples
@@ -101,6 +113,10 @@ PRs and ideas are welcome. Potential improvements:
 * Streaming + token usage stats
 
 Fork → branch → PR. Please include a brief description and before/after screenshots for UI changes.
+
+# Structured Prompt Builder
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-@Siddhesh2377-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/Siddhesh2377)
 
 ## License
 
